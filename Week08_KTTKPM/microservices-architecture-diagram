@@ -1,0 +1,31 @@
+digraph {
+	rankdir=LR size=10
+	Client [label="Client
+(Postman / Web UI)" fillcolor=lightblue shape=box style=filled]
+	Gateway [label="API Gateway
+(port 3000)" fillcolor=lightgray shape=box style=filled]
+	Product [label="Product Service
+(port 3001)" fillcolor=lightyellow shape=box style=filled]
+	Order [label="Order Service
+(port 3002)" fillcolor=lightyellow shape=box style=filled]
+	Customer [label="Customer Service
+(port 3003)" fillcolor=lightyellow shape=box style=filled]
+	ProductDB [label="MongoDB
+(productdb)
+(port 27017)" fillcolor=mistyrose shape=cylinder style=filled]
+	OrderDB [label="MongoDB
+(orderdb)
+(port 27018)" fillcolor=mistyrose shape=cylinder style=filled]
+	CustomerDB [label="MongoDB
+(customerdb)
+(port 27019)" fillcolor=mistyrose shape=cylinder style=filled]
+	Client -> Gateway
+	Gateway -> Product
+	Gateway -> Order
+	Gateway -> Customer
+	Order -> Product [label="fetch product" style=dashed]
+	Order -> Customer [label="verify customer" style=dashed]
+	Product -> ProductDB
+	Order -> OrderDB
+	Customer -> CustomerDB
+}

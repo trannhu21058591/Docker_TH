@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Product Service
+  product-service:
+    build: ./product-service
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URL=mongodb://product-mongo:27017/productdb
+    depends_on:
+      - product-mongo
+
+  product-mongo:
+    image: mongo
+    container_name: product-mongo
+    ports:
+      - "27017:27017"  # Cho phép Mongo Compass truy cập
+    volumes:
+      - product-data:/data/db
+
+  # Order Service
+  order-service:
+    build: ./order-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGO_URL=mongodb://order-mongo:27017/orderdb
+    depends_on:
+      - order-mongo
+
+  order-mongo:
+    image: mongo
+    container_name: order-mongo
+    ports:
+      - "27018:27017"  # Expose riêng port này cho order
+    volumes:
+      - order-data:/data/db
+
+  # Customer Service
+  customer-service:
+    build: ./customer-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGO_URL=mongodb://customer-mongo:27017/customerdb
+    depends_on:
+      - customer-mongo
+
+  customer-mongo:
+    image: mongo
+    container_name: customer-mongo
+    ports:
+      - "27019:27017"  # Expose riêng port này cho customer
+    volumes:
+      - customer-data:/data/db
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - product-service
+      - order-service
+      - customer-service
+
+volumes:
+  product-data:
+  order-data:
+  customer-data:
